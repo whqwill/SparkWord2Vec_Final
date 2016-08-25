@@ -1,0 +1,50 @@
+## testing tsne with IRIS data
+library(tsne)
+colors = rainbow(length(unique(iris$Species)))
+names(colors) = unique(iris$Species)
+ecb = function(x,y){ plot(x,t='n'); text(x,labels=iris$Species, col=colors[iris$Species]) }
+tsne_iris = tsne(iris[,1:4], epoch_callback = ecb, perplexity=50)
+# compare to PCA
+dev.new()
+pca_iris = princomp(iris[,1:4])$scores[,1:2]
+plot(pca_iris, t='n')
+text(pca_iris, labels=iris$Species,col=colors[iris$Species])
+
+##-----------------------------------------------------------------------------------------------------------
+# see http://www.codeproject.com/Tips/788739/Visualization-of-High-Dimensional-Data-using-t-SNE
+# download data from http://www.dropbox.com/s/5s9l622sawm6ptf/samplewordembedding.csv
+mydata <- read.table("/home/gpaass/data/corpora/samplewordembedding.csv", header=TRUE, sep=",")
+
+
+# load the tsne package, which has complexity O(N^2)
+library(tsne)
+
+# initialize counter to 0
+x <- 0
+epc <- function(x) {
+    x <<- x + 1
+    filename <- paste("/home/gpaass/plot", x, "jpg", sep=".")
+    cat("> Plotting TSNE to ", filename, " ")
+
+    # plot to /home/gpaass/plot.x.jpg file of 2400x1800 dimension
+    jpeg(filename, width=2400, height=1800)
+
+    plot(x, t='n', main="T-SNE")
+    text(x, labels=rownames(mydata))
+    dev.off()
+}
+
+# run tsne (maximum iterations:500, callback every 100 epochs, target dimension k=5)
+tsne_data <- tsne(mydata, k=5, epoch_callback=epc, max_iter=500, epoch=100)
+
+#--- run rtsne, which is faster O(nlog(n))
+# load the Rtsne package
+library(Rtsne)
+
+# run Rtsne with default parameters
+rtsne_out <- Rtsne(as.matrix(mydata))
+
+# plot the output of Rtsne into d:\\barneshutplot.jpg file of 2400x1800 dimension
+jpeg("d:\\barneshutplot.jpg", width=2400, height=1800)
+plot(rtsne_out$Y, t='n', main="BarnesHutSNE")
+text(rtsne_out$Y, labels=rownames(mydata))

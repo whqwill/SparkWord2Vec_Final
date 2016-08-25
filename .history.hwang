@@ -1,0 +1,8 @@
+2016-08-25.12-44-49 rm -rf target/
+2016-08-25.12-44-52 rm -rf SourceCode/
+2016-08-25.12-45-40 rm README.md 
+2016-08-25.12-45-42 echo "# SparkWord2Vec_Final" >> README.md
+2016-08-25.12-45-49 git init
+2016-08-25.12-45-54 git add *
+2016-08-25.12-46-02 git add A
+2016-08-25.12-46-04 git add -a
